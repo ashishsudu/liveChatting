@@ -22,7 +22,7 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn && username.trim()) {
-      socketRef.current = io('http://192.168.3.209:3001', {
+      socketRef.current = io({
         transports: ['websocket', 'polling'],
         reconnection: true,
       });

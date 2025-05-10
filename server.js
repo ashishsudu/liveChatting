@@ -77,8 +77,8 @@ io.on('connection', (socket) => {
 const distPath = path.resolve(__dirname, 'dist');
 app.use(express.static(distPath));
 
-// Important fallback route
-app.get('/', (req, res) => {
+// Important fallback route for SPA (serves index.html for any route)
+app.get('*', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
