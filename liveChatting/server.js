@@ -8,8 +8,11 @@ const app = express();
 const server = http.createServer(app);
 
 // Middlewares
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
 
 const io = new Server(server, {
   cors: {
@@ -70,17 +73,13 @@ io.on('connection', (socket) => {
   });
 });
 
-// Serve static files
+// Serve frontend (Vite build)
 const distPath = path.resolve(__dirname, 'dist');
 app.use(express.static(distPath));
 
-// Middleware to handle all routes for SPA
-app.use((req, res, next) => {
-  if (!req.path.startsWith('/socket.io/')) {
-    res.sendFile(path.join(distPath, 'index.html'));
-  } else {
-    next();
-  }
+// Important fallback route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
 });
 
 // Start server
